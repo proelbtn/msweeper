@@ -5,25 +5,44 @@
 
 void display(msweeper& ms) {
     printf(" ");
-    for(int i = 0; i < 8; i++) printf("%d", i);
+    for(int i = 0; i < ms.width; i++) {
+        if(i % 10 == 0) putchar('0');
+        else if(i % 10 == 5) putchar('5');
+        else putchar(' ');
+    }
     printf("\n");
-    for(int y = 0; y < 8; y++) {
-        printf("%d", y);
-        for(int x = 0; x < 8; x++) {
-            printf("%c", ms.at(x, y));
+    for(int y = 0; y < ms.height; y++) {
+        if(y % 10 == 0) putchar('0');
+        else if(y % 10 == 5) putchar('5');
+        else putchar(' ');
+
+        for(int x = 0; x < ms.width; x++) {
+            putchar("_12345678."[ms.at(x, y)]);
         }
-        printf("\n");
+
+        putchar('\n');
     }
 }
 
+void get_integer(const char *s, int &v) {
+    std::cout << s << " : ";
+    std::cin >> v;
+}
+
 int main() {
-    msweeper ms(5);
+    int x, y, width, height, bomb;
+
+    get_integer("Width", width);
+    get_integer("Height", height);
+    get_integer("Bomb", bomb);
+
+    msweeper ms(width, height, bomb);
 
     while(ms.get_status() == msweeper::status::MS_NONE) {
         display(ms);
 
-        int x, y;
-        std::cin >> x >> y;
+        get_integer("X", x);
+        get_integer("Y", y);
 
         ms.open(x, y);
     }
