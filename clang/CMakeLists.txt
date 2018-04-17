@@ -5,7 +5,8 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(SRCS
         main.cpp
-        src/msweeper.cpp)
+        src/msweeper.cpp
+        src/curses.cpp)
 
 include_directories(./include)
 

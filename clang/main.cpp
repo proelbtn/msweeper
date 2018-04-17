@@ -1,9 +1,12 @@
 #include <array>
 #include <iostream>
 
+#include "curses.hpp"
 #include "msweeper.hpp"
 
 void display(msweeper& ms) {
+    uint32_t flag;
+
     printf(" ");
     for(int i = 0; i < ms.width; i++) {
         if(i % 10 == 0) putchar('0');
@@ -17,6 +20,24 @@ void display(msweeper& ms) {
         else putchar(' ');
 
         for(int x = 0; x < ms.width; x++) {
+            int t = ms.at(x, y);
+
+            curses::chctl(curses::AT_RESET);
+            flag = 0;
+            flag |= (1 <= t && t <= 8 ? curses::AT_BOLD : 0);
+            switch(t) {
+                case 1: flag |= curses::FG_YELLOW; break;
+                case 2: flag |= curses::FG_GREEN; break;
+                case 3: flag |= curses::FG_CYAN; break;
+                case 4: flag |= curses::FG_CYAN; break;
+                case 5: flag |= curses::FG_BLUE; break;
+                case 6: flag |= curses::FG_BLUE; break;
+                case 7: flag |= curses::FG_RED; break;
+                case 8: flag |= curses::FG_RED; break;
+                default: flag |= curses::FG_WHITE; break;
+            }
+            curses::chctl(flag);
+
             putchar("_12345678."[ms.at(x, y)]);
         }
 
@@ -39,6 +60,7 @@ int main() {
     msweeper ms(width, height, bomb);
 
     while(ms.get_status() == msweeper::status::MS_NONE) {
+        curses::clear();
         display(ms);
 
         get_integer("X", x);
@@ -47,5 +69,6 @@ int main() {
         ms.open(x, y);
     }
 
-    return ms.get_status() == msweeper::status::MS_GAME_CLEAR ? 0 : -1;
+    if(ms.get_status() == msweeper::status::MS_GAME_CLEAR) std::cout << "GAME CLEAR!" << std::endl;
+    else std::cout << "GAME OVER..." << std::endl;
 }
