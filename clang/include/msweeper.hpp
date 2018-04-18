@@ -25,10 +25,10 @@ public:
         MS_NONE
     };
 
-    const uint32_t width;
-    const uint32_t height;
+    const unsigned int width;
+    const unsigned int height;
 
-    msweeper(uint32_t width, uint32_t height, uint32_t bnum);
+    msweeper(unsigned int width, unsigned int height, unsigned int bnum);
 
     msweeper::cell_status at(int x, int y);
     bool open(int x, int y);

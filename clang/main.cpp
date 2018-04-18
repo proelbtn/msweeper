@@ -7,14 +7,26 @@
 void display(msweeper& ms) {
     uint32_t flag;
 
+    curses::chctl(curses::AT_RESET);
+
     printf(" ");
     for(int i = 0; i < ms.width; i++) {
-        if(i % 10 == 0) putchar('0');
-        else if(i % 10 == 5) putchar('5');
+        if(i % 10 == 0) printf(" 0");
+        else if(i % 10 == 5) printf(" 5");
         else putchar(' ');
     }
     printf("\n");
     for(int y = 0; y < ms.height; y++) {
+        if(y % 5 == 0) {
+            curses::chctl(curses::AT_RESET);
+            printf("  ");
+            for(int x = 0; x < ms.width; x++) {
+                if(x % 5 == 0 && x != 0) putchar(y == 0 ? ' ' : '+');
+                putchar(y == 0 ? ' ' : '-');
+            }
+            putchar('\n');
+        }
+
         if(y % 10 == 0) putchar('0');
         else if(y % 10 == 5) putchar('5');
         else putchar(' ');
@@ -23,6 +35,7 @@ void display(msweeper& ms) {
             int t = ms.at(x, y);
 
             curses::chctl(curses::AT_RESET);
+            if(x % 5 == 0) putchar(x == 0 ? ' ' : '|');
             flag = 0;
             flag |= (1 <= t && t <= 8 ? curses::AT_BOLD : 0);
             switch(t) {
@@ -38,7 +51,7 @@ void display(msweeper& ms) {
             }
             curses::chctl(flag);
 
-            putchar("_12345678."[ms.at(x, y)]);
+            putchar(" 12345678."[ms.at(x, y)]);
         }
 
         putchar('\n');

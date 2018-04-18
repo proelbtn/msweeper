@@ -4,25 +4,25 @@
 #include <cstdint>
 
 namespace curses {
-    const uint32_t AT_RESET      = 1 << 0;
-    const uint32_t AT_BOLD       = 1 << 1;
-    const uint32_t AT_UNDERLINE  = 1 << 2;
-    const uint32_t FG_BLACK      = 1 << 8;
-    const uint32_t FG_RED        = 2 << 8;
-    const uint32_t FG_GREEN      = 3 << 8;
-    const uint32_t FG_YELLOW     = 4 << 8;
-    const uint32_t FG_BLUE       = 5 << 8;
-    const uint32_t FG_MAGENTA    = 6 << 8;
-    const uint32_t FG_CYAN       = 7 << 8;
-    const uint32_t FG_WHITE      = 8 << 8;
-    const uint32_t BG_BLACK      = 1 << 16;
-    const uint32_t BG_RED        = 2 << 16;
-    const uint32_t BG_GREEN      = 3 << 16;
-    const uint32_t BG_YELLOW     = 4 << 16;
-    const uint32_t BG_BLUE       = 5 << 16;
-    const uint32_t BG_MAGENTA    = 6 << 16;
-    const uint32_t BG_CYAN       = 7 << 16;
-    const uint32_t BG_WHITE      = 8 << 16;
+    const unsigned int AT_RESET      = 1 << 0;
+    const unsigned int AT_BOLD       = 1 << 1;
+    const unsigned int AT_UNDERLINE  = 1 << 2;
+    const unsigned int FG_BLACK      = 1 << 8;
+    const unsigned int FG_RED        = 2 << 8;
+    const unsigned int FG_GREEN      = 3 << 8;
+    const unsigned int FG_YELLOW     = 4 << 8;
+    const unsigned int FG_BLUE       = 5 << 8;
+    const unsigned int FG_MAGENTA    = 6 << 8;
+    const unsigned int FG_CYAN       = 7 << 8;
+    const unsigned int FG_WHITE      = 8 << 8;
+    const unsigned int BG_BLACK      = 1 << 16;
+    const unsigned int BG_RED        = 2 << 16;
+    const unsigned int BG_GREEN      = 3 << 16;
+    const unsigned int BG_YELLOW     = 4 << 16;
+    const unsigned int BG_BLUE       = 5 << 16;
+    const unsigned int BG_MAGENTA    = 6 << 16;
+    const unsigned int BG_CYAN       = 7 << 16;
+    const unsigned int BG_WHITE      = 8 << 16;
 
     void clear() {
         printf("\033[2J");

@@ -2,9 +2,10 @@
 
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <random>
 
-msweeper::msweeper(uint32_t width, uint32_t height, uint32_t bnum) :
+msweeper::msweeper(unsigned int width, unsigned int height, unsigned int bnum) :
     width(width), height(height), bomb(width * height, false), opened(width * height, false) 
 {
     if (!(bnum <= width * height)) throw 0;
