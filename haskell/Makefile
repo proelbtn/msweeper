@@ -1,5 +1,11 @@
-all:
-	stack ghc -- -o msweeper main.hs
+run: build
+	@stack exec --allow-different-user test-exe
 
-clean: 
-	rm -rf msweeper *.o *.hi
+build:
+	@stack build --allow-different-user
+
+install:
+	@stack install --allow-different-user
+
+test:
+	@stack test --allow-different-user

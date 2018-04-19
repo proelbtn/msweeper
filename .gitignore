@@ -93,5 +93,6 @@ CTestTestfile.cmake
 *.app
 
 
-msweeper
-*.hi
+haskell/.stack-work/
+haskell/test.cabal
+haskell/*~
