@@ -93,3 +93,5 @@ CTestTestfile.cmake
 *.app
 
 
+msweeper
+*.hi
