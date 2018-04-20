@@ -2,8 +2,11 @@ module Main where
 
 import Lib
 
+import System.Random.Shuffle
+
 main :: IO ()
 main = do
     params <- getParameters
-    let states = initMap params
-    print states 
+    states <- initMap params
+    result <- msweeper states
+    print result

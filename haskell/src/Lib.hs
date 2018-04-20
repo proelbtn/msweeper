@@ -1,20 +1,14 @@
 module Lib (
-    MSParams,
-    MSMap,
-    MSStates,
-    MSCoords,
     getInteger,
     getParameters,
     getCoordinates,
-    initMap
+    initMap,
+    msweeper
     ) where
 
 import System.IO
-
-type MSParams = (Int, Int, Int)
-type MSMap = [Bool]
-type MSStates = (MSParams, MSMap, MSMap)
-type MSCoords = (Int, Int)
+import Types
+import System.Random.Shuffle
 
 getInteger :: String -> IO Int
 getInteger text = do
@@ -36,9 +30,25 @@ getCoordinates = do
     y <- getInteger "Y : "
     return (x, y)
 
-initMap :: MSParams -> MSStates
-initMap params = (params, opened, bomb) 
-    where
-        (width, height, bnum) = params
-        opened = map (== 0) [1..width * height]
-        bomb = map (<= bnum) [1..width * height]
+initMap :: MSParams -> IO MSStates
+initMap params = do
+    let (width, height, bnum) = params
+    let opened = replicate (width * height) False
+    bomb <- shuffleM $ map (<= bnum) $ take (width * height) [1..]
+    return (params, opened, bomb)
+
+isGameEnd :: MSStates -> Bool
+isGameEnd states = True
+
+-- getNextStates :: MSCoords -> MSStates -> MSStates
+-- getNextStates coords states =
+
+getGameResults :: MSStates -> Bool
+getGameResults states = True
+
+msweeper :: MSStates -> IO (Bool)
+msweeper states = do
+    coords <- getCoordinates
+    -- let nstates = getNextStates coords states
+    return True
+        
