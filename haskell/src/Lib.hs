@@ -37,18 +37,25 @@ initMap params = do
     bomb <- shuffleM $ map (<= bnum) $ take (width * height) [1..]
     return (params, opened, bomb)
 
+displayMap :: MSStates -> IO ()
+displayMap states = do
+    print "a"
+
 isGameEnd :: MSStates -> Bool
 isGameEnd states = True
 
--- getNextStates :: MSCoords -> MSStates -> MSStates
--- getNextStates coords states =
+getNextStates :: MSCoords -> MSStates -> MSStates
+getNextStates coords states = states
 
-getGameResults :: MSStates -> Bool
+getGameResults :: MSStates -> MSResult
 getGameResults states = True
 
-msweeper :: MSStates -> IO (Bool)
+msweeper :: MSStates -> IO (MSResult)
 msweeper states = do
+    displayMap states
     coords <- getCoordinates
-    -- let nstates = getNextStates coords states
-    return True
+    let nstates = getNextStates coords states
+    if isGameEnd nstates
+        then return $ getGameResults nstates
+        else msweeper nstates
         
