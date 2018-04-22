@@ -97,3 +97,16 @@ CTestTestfile.cmake
 haskell/.stack-work/
 haskell/test.cabal
 haskell/*~
+
+/javascript/.DS_Store
+/javascript/node_modules/
+/javascript//dist/
+/javascript/npm-debug.log*
+/javascript/yarn-debug.log*
+/javascript/yarn-error.log*
+/javascript/.idea
+/javascript/.vscode
+/javascript/*.suo
+/javascript/*.ntvs*
+/javascript/*.njsproj
+/javascript/*.sln
