@@ -4,6 +4,20 @@
 #include "curses.hpp"
 #include "msweeper.hpp"
 
+void f(int &t, int &flag) {
+    switch(t) {
+        case 1: flag |= curses::FG_YELLOW; break;
+        case 2: flag |= curses::FG_GREEN; break;
+        case 3: flag |= curses::FG_CYAN; break;
+        case 4: flag |= curses::FG_CYAN; break;
+        case 5: flag |= curses::FG_BLUE; break;
+        case 6: flag |= curses::FG_BLUE; break;
+        case 7: flag |= curses::FG_RED; break;
+        case 8: flag |= curses::FG_RED; break;
+        default: flag |= curses::FG_WHITE; break;
+    }
+}
+
 void display(msweeper& ms) {
     uint32_t flag;
 
@@ -38,22 +52,11 @@ void display(msweeper& ms) {
             if(x % 5 == 0) putchar(x == 0 ? ' ' : '|');
             flag = 0;
             flag |= (1 <= t && t <= 8 ? curses::AT_BOLD : 0);
-            switch(t) {
-                case 1: flag |= curses::FG_YELLOW; break;
-                case 2: flag |= curses::FG_GREEN; break;
-                case 3: flag |= curses::FG_CYAN; break;
-                case 4: flag |= curses::FG_CYAN; break;
-                case 5: flag |= curses::FG_BLUE; break;
-                case 6: flag |= curses::FG_BLUE; break;
-                case 7: flag |= curses::FG_RED; break;
-                case 8: flag |= curses::FG_RED; break;
-                default: flag |= curses::FG_WHITE; break;
-            }
+            f(t, flag);
             curses::chctl(flag);
 
             putchar(" 12345678."[ms.at(x, y)]);
         }
-
         putchar('\n');
     }
 }
