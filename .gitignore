@@ -110,3 +110,5 @@ haskell/*~
 /javascript/*.ntvs*
 /javascript/*.njsproj
 /javascript/*.sln
+
+/rust/target

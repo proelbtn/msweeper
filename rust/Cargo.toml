@@ -1,0 +1,7 @@
+[package]
+name = "msweeper"
+version = "0.1.0"
+authors = ["proelbtn"]
+
+[dependencies]
+rand="0.4.2"
