@@ -1,6 +1,7 @@
 [package]
-name = "rust"
+name = "msweeper"
 version = "0.1.0"
-authors = ["ryogaelbtn"]
+authors = ["proelbtn"]
 
 [dependencies]
+rand="0.4.2"
