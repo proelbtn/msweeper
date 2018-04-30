@@ -76,7 +76,12 @@ impl Msweeper {
                     if !self.b_check(x, y, dx, dy) { continue }
                     let (cx, cy) = ((x as i32 + dx) as usize, (y as i32 + dy) as usize);
                     match self.at(cx, cy) {
-                        Ok((opened, _)) => if !opened { self.open(cx, cy); },
+                        Ok((opened, _)) => if !opened { 
+                            match self.open(cx, cy) {
+                                Ok(_) => (),
+                                Err(_) => return Err("internal processing error.".to_string())
+                            }
+                        },
                         Err(_) => return Err("internal processing error.".to_string())
                     }
                 }
