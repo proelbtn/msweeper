@@ -1,0 +1,4 @@
+[build]
+    base = "javascript/"
+    publish = "javascript/dist"
+    command = "yarn build"
