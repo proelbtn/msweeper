@@ -1,11 +1,11 @@
 <template>
-  <svg id="app" width="240" height="240">
-    <g v-for="y in range(8)">
-      <g v-for="x in range(8)">
+  <svg id="app" :width="width * 30" :height="height * 30">
+    <g v-for="y in range(height)">
+      <g v-for="x in range(width)">
         <Cell :x="x"
               :y="y"
               :state="getState(x, y)"
-              :opened="opened[y * 8 + x]"
+              :opened="opened[y * width + x]"
               @open="open"
         />
       </g>
@@ -26,8 +26,13 @@
     return array;
   }
 
+  function is_range(x, y, w, h) {
+    return 0 <= x && x < w && 0 <= y && y < h;
+  }
+
   export default {
     name: 'App',
+    props: ['width', 'height', 'bnum'],
     components: {
       Cell
     },
@@ -37,25 +42,42 @@
         for (let i = 0; i < n; i++) t[i] = i;
         return t;
       },
+
       getState(x, y) {
+        if (this.bomb[y * this.width + x]) return 9;
+
         let count = 0;
         for (let dy = -1; dy < 2; dy++) {
           for (let dx = -1; dx < 2; dx++) {
             if (!dx && !dy) continue;
             const nx = x + dx, ny = y + dy;
-            if (0 <= nx && nx < 8 && 0 <= ny && ny < 8 && this.bomb[ny * 8 + nx]) count++;
+            if (is_range(nx, ny, this.width, this.height)) {
+              if (this.bomb[ny * this.width + nx]) count++;
+            }
           }
         }
+        return count;
       },
+
       open(x, y) {
-        this.opened.splice(y * 8 + x, 1, true);
+        this.opened.splice(y * this.height + x, 1, true);
+        if (this.getState(x, y) != 0) return; 
+        for (let dy = -1; dy < 2; dy++) {
+          for (let dx = -1; dx < 2; dx++) {
+            if (!dx && !dy) continue;
+            const nx = x + dx, ny = y + dy;
+            if (is_range(nx, ny, this.width, this.height)) {
+              if (!this.opened[ny * this.width + nx]) this.open(nx, ny);
+            }
+          }
+        }
       }
     },
     data() {
       let bomb = [], opened = [];
-      for (let pos = 0; pos < 64; pos++) {
+      for (let pos = 0; pos < this.width * this.height; pos++) {
         opened[pos] = false;
-        bomb[pos] = pos < 10;
+        bomb[pos] = pos < this.bnum;
       }
       return {
         bomb: shuffleArray(bomb),

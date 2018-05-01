@@ -1,10 +1,24 @@
 <template>
   <g>
+    <text v-if="state == 9"
+          :x="x * 30 + 15" 
+          :y="y * 30 + 15" 
+          text-anchor="middle" 
+          dominant-baseline="central">
+      M
+    </text>
+    <text v-if="1 <= state && state <= 8"
+          :x="x * 30 + 15" 
+          :y="y * 30 + 15" 
+          text-anchor="middle" 
+          dominant-baseline="central">
+      {{ state }}
+    </text>
     <rect class="cell" :class="{ concealed: !opened }"
           :x="x * 30 + 1"
           :y="y * 30 + 1"
-          width="28"
-          height="28"
+          :width="30 - 2"
+          :height="30 - 2"
           @click="$emit('open', x, y)">
     </rect>
   </g>
