@@ -5,7 +5,10 @@
 #include "curses.hpp"
 #include "msweeper.hpp"
 
-void flag_set(int t, uint32_t &flag) {
+const char *num_bar = "0    5    ";
+const char *cell = ".12345678#";
+
+void flag_color_set(int t, uint32_t &flag) {
     switch(t) {
         case 1: flag |= curses::FG_YELLOW; break;
         case 2: flag |= curses::FG_GREEN; break;
@@ -20,17 +23,12 @@ void flag_set(int t, uint32_t &flag) {
 }
 
 void display(msweeper& ms) {
-    uint32_t flag;
-
     curses::chctl(curses::AT_RESET);
-
+    
     printf(" ");
-    for(int i = 0; i < ms.width; i++) {
-        if(i % 10 == 0) printf("|0");
-        else if(i % 10 == 5) printf("|5");
-        else putchar(' ');
-    }
+    for(int i = 0; i < ms.width; i++) printf("%s%c", i % 5 == 0 ? "|" : "", (i % 10)[num_bar]);
     putchar('\n');
+
     for(int y = 0; y < ms.height; y++) {
         if(y % 5 == 0) {
             curses::chctl(curses::AT_RESET);
@@ -39,18 +37,19 @@ void display(msweeper& ms) {
             putchar('\n');
         }
 
-        putchar((y % 10)["0    5    "]);
+        putchar((y % 10)[num_bar]);
         for(int x = 0; x < ms.width; x++) {
+            uint32_t flag = 0;
             int t = ms.at(x, y);
 
             curses::chctl(curses::AT_RESET);
             printf("%s", x % 5 == 0 ? "|" : "");
             flag = 0;
             flag |= (1 <= t && t <= 8 ? curses::AT_BOLD : 0);
-            flag_set(t, flag);
+            flag_color_set(t, flag);
             curses::chctl(flag);
 
-            putchar(t[".12345678#"]);
+            putchar(t[cell]);
         }
         putchar('\n');
     }
