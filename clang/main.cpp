@@ -5,7 +5,7 @@
 #include "curses.hpp"
 #include "msweeper.hpp"
 
-void f(int t, uint32_t &flag) {
+void flag_set(int t, uint32_t &flag) {
     switch(t) {
         case 1: flag |= curses::FG_YELLOW; break;
         case 2: flag |= curses::FG_GREEN; break;
@@ -26,37 +26,31 @@ void display(msweeper& ms) {
 
     printf(" ");
     for(int i = 0; i < ms.width; i++) {
-        if(i % 10 == 0) printf(" 0");
-        else if(i % 10 == 5) printf(" 5");
+        if(i % 10 == 0) printf("|0");
+        else if(i % 10 == 5) printf("|5");
         else putchar(' ');
     }
-    printf("\n");
+    putchar('\n');
     for(int y = 0; y < ms.height; y++) {
         if(y % 5 == 0) {
             curses::chctl(curses::AT_RESET);
-            printf("  ");
-            for(int x = 0; x < ms.width; x++) {
-                if(x % 5 == 0 && x != 0) putchar(y == 0 ? ' ' : '+');
-                putchar(y == 0 ? ' ' : '-');
-            }
+            printf("-");
+            for(int x = 0; x < ms.width; x++) printf("%s", x % 5 == 0 ? "+-" : "-");
             putchar('\n');
         }
 
-        if(y % 10 == 0) putchar('0');
-        else if(y % 10 == 5) putchar('5');
-        else putchar(' ');
-
+        putchar((y % 10)["0    5    "]);
         for(int x = 0; x < ms.width; x++) {
             int t = ms.at(x, y);
 
             curses::chctl(curses::AT_RESET);
-            if(x % 5 == 0) putchar(x == 0 ? ' ' : '|');
+            printf("%s", x % 5 == 0 ? "|" : "");
             flag = 0;
             flag |= (1 <= t && t <= 8 ? curses::AT_BOLD : 0);
-            f(t, flag);
+            flag_set(t, flag);
             curses::chctl(flag);
 
-            putchar(" 12345678."[ms.at(x, y)]);
+            putchar(t[".12345678#"]);
         }
         putchar('\n');
     }
