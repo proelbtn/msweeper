@@ -35,41 +35,25 @@ namespace curses {
 
     void chctl(uint32_t flag) {
         switch (flag & (0xF << 8)) {
-            case FG_BLACK:
-                printf("\033[30m"); break;
-            case FG_RED:
-                printf("\033[31m"); break;
-            case FG_GREEN:
-                printf("\033[32m"); break;
-            case FG_YELLOW:
-                printf("\033[33m"); break;
-            case FG_BLUE:
-                printf("\033[34m"); break;
-            case FG_MAGENTA:
-                printf("\033[35m"); break;
-            case FG_CYAN:
-                printf("\033[36m"); break;
-            case FG_WHITE:
-                printf("\033[37m"); break;
+            case FG_BLACK: printf("\033[30m"); break;
+            case FG_RED: printf("\033[31m"); break;
+            case FG_GREEN: printf("\033[32m"); break;
+            case FG_YELLOW: printf("\033[33m"); break;
+            case FG_BLUE: printf("\033[34m"); break;
+            case FG_MAGENTA: printf("\033[35m"); break;
+            case FG_CYAN: printf("\033[36m"); break;
+            case FG_WHITE: printf("\033[37m"); break;
         }
 
         switch (flag & (0xF << 16)) {
-            case BG_BLACK:
-                printf("\033[40m"); break;
-            case BG_RED:
-                printf("\033[41m"); break;
-            case BG_GREEN:
-                printf("\033[42m"); break;
-            case BG_YELLOW:
-                printf("\033[43m"); break;
-            case BG_BLUE:
-                printf("\033[44m"); break;
-            case BG_MAGENTA:
-                printf("\033[45m"); break;
-            case BG_CYAN:
-                printf("\033[46m"); break;
-            case BG_WHITE:
-                printf("\033[47m"); break;
+            case BG_BLACK: printf("\033[40m"); break;
+            case BG_RED: printf("\033[41m"); break;
+            case BG_GREEN: printf("\033[42m"); break;
+            case BG_YELLOW: printf("\033[43m"); break;
+            case BG_BLUE: printf("\033[44m"); break;
+            case BG_MAGENTA: printf("\033[45m"); break;
+            case BG_CYAN: printf("\033[46m"); break;
+            case BG_WHITE: printf("\033[47m"); break;
         }
 
         if (flag & curses::AT_BOLD) printf("\033[1m");
