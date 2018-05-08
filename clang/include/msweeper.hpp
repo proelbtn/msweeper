@@ -16,7 +16,8 @@ public:
         MS_CELL_SIX,
         MS_CELL_SEVEN,
         MS_CELL_EIGHT,
-        MS_CELL_NOT_OPENED
+        MS_CELL_NOT_OPENED,
+        MS_CELL_INVALID = -1
     };
 
     enum status {

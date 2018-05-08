@@ -17,15 +17,14 @@ msweeper::msweeper(unsigned int width, unsigned int height, unsigned int bnum) :
 }
 
 msweeper::cell_status msweeper::at(int x, int y) {
-    if (!opened.at(y * width + x)) return msweeper::cell_status::MS_CELL_NOT_OPENED;
+    if (is_range(x, y)) return msweeper::cell_status::MS_CELL_INVALID;
+    if (!opened[y * width + x]) return msweeper::cell_status::MS_CELL_NOT_OPENED;
 
     int c = 0;
-
     for (int dx = -1; dx < 2; dx++) {
         for (int dy = -1; dy < 2; dy++) {
             int nx = x + dx, ny = y + dy;
-            if ((dx == 0 && dy == 0) || !is_range(nx, ny)) continue;
-            if (bomb.at(ny * width + nx)) c++;
+            if (is_range(nx, ny) && bomb[ny * width + nx]) c++;
         }
     }
 
@@ -35,16 +34,15 @@ msweeper::cell_status msweeper::at(int x, int y) {
 bool msweeper::open(int x, int y) {
     int pos = y * width + x;
 
-    if(opened.at(pos)) return false;
+    if(!is_range(x, y)) return false;
+    if(opened[pos]) return false;
 
-    opened.at(pos) = true;
-
+    opened[pos] = true;
     if (at(x, y) == MS_CELL_ZERO) {
         for (int dx = -1; dx < 2; dx++) {
             for (int dy = -1; dy < 2; dy++) {
                 int nx = x + dx, ny = y + dy;
-                if ((dx == 0 && dy == 0) || !is_range(nx, ny)) continue;
-                if (!opened.at(ny * width + nx)) open(nx, ny);
+                if (!(dx == 0 && dy == 0)) open(nx, ny);
             }
         }
     }
