@@ -1,10 +1,11 @@
 #include <array>
 #include <iostream>
+#include <limits>
 
 #include "curses.hpp"
 #include "msweeper.hpp"
 
-void f(int &t, int &flag) {
+void f(int t, uint32_t &flag) {
     switch(t) {
         case 1: flag |= curses::FG_YELLOW; break;
         case 2: flag |= curses::FG_GREEN; break;
@@ -61,13 +62,27 @@ void display(msweeper& ms) {
     }
 }
 
-void get_integer(const char *s, int &v) {
-    std::cout << s << " : ";
-    std::cin >> v;
+int get_integer(const char *s, int &v) {
+    int c, r;
+
+    do {
+        try {
+            std::cout << s << " : ";
+            std::cin >> v;
+            r = 0;
+        } catch (std::exception& e) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            r = -1;
+        }
+    } while(r != 0);
+
 }
 
 int main() {
     int x, y, width, height, bomb;
+
+    std::cin.exceptions(std::ios::failbit);
 
     get_integer("Width", width);
     get_integer("Height", height);
