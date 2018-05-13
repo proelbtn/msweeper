@@ -62,23 +62,23 @@ void display_map(msweeper& ms) {
 }
 
 void get_integer(const char *s, int &v) {
-    bool f;
+    bool f = true;
     size_t sz;
     std::string t;
 
     do {
-        f = true;
         try {
             std::cout << s << " : ";
             std::cin >> t;
             v = std::stoi(t, &sz);
-            if (t.size() != sz) throw std::exception();
-            f = false;
-        } catch (std::exception& e) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "[ERR] Runtime Error (expected ONLY Integer)" << std::endl;
+            f = t.size() != sz;
         }
+        catch (std::invalid_argument) {
+            f = true;
+        }
+
+        if (f)
+            std::cout << "[ERR] Runtime Error (expected ONLY Integer)" << std::endl;
     } while (f);
 }
 
@@ -113,8 +113,6 @@ msweeper init_msweeper() {
 int main() {
     int x, y;
     bool f;
-
-    std::cin.exceptions(std::ios::failbit);
 
     msweeper ms = init_msweeper();
 
