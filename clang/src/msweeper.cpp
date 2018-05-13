@@ -4,20 +4,22 @@
 #include <array>
 #include <chrono>
 #include <random>
+#include <stdexcept>
 
 msweeper::msweeper(unsigned int width, unsigned int height, unsigned int bnum) :
     width(width), height(height), bomb(width * height, false), opened(width * height, false) 
 {
-    if (!(bnum <= width * height)) throw 0;
+    if (!(0 <= bnum && bnum <= width * height)) 
+        throw std::invalid_argument("expected 0 <= bnum <= width * height");
 
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
 
-    for (int i = 0; i < bnum; i++) bomb.at(i) = true;
+    for (int i = 0; i < bnum; i++) bomb[i] = true;
     std::shuffle(bomb.begin(), bomb.end(), std::default_random_engine(seed));
 }
 
 msweeper::cell_status msweeper::at(int x, int y) {
-    if (is_range(x, y)) return msweeper::cell_status::MS_CELL_INVALID;
+    if (!is_range(x, y)) return msweeper::cell_status::MS_CELL_INVALID;
     if (!opened[y * width + x]) return msweeper::cell_status::MS_CELL_NOT_OPENED;
 
     int c = 0;
