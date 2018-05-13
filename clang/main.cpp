@@ -69,16 +69,18 @@ void get_integer(const char *s, int &v) {
     do {
         try {
             std::cout << s << " : ";
-            std::cin >> t;
+            std::getline(std::cin, t);
             v = std::stoi(t, &sz);
             f = t.size() != sz;
         }
-        catch (std::invalid_argument) {
+        catch (std::invalid_argument &e) {
             f = true;
         }
-
-        if (f)
+        
+        if (f) {
+            std::cin.clear();
             std::cout << "[ERR] Runtime Error (expected ONLY Integer)" << std::endl;
+        }
     } while (f);
 }
 
