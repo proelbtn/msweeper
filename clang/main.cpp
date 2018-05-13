@@ -7,7 +7,14 @@
 #include "msweeper.hpp"
 
 const char *num_bar = "0    5    ";
-const char *cell = ".12345678#";
+const char *cell    = ".12345678#";
+
+const char *err_msg_width  = "[ERR] Constraint Error (0 <= Width)";
+const char *err_msg_height = "[ERR] Constraint Error (0 <= Height)";
+const char *err_msg_bomb   = "[ERR] Constraint Error (0 <= Bomb <= Width * Height)";
+const char *err_msg_x      = "[ERR] Constraint Error (0 <= X <= Width)";
+const char *err_msg_y      = "[ERR] Constraint Error (0 <= Y <= Height)";
+const char *err_msg_open   = "[ERR] Invalid Argument (This cell was opened)";
 
 void flag_color_set(int t, uint32_t &flag) {
     switch(t) {
@@ -23,7 +30,8 @@ void flag_color_set(int t, uint32_t &flag) {
     }
 }
 
-void display(msweeper& ms) {
+void display_map(msweeper& ms) {
+    curses::clear();
     curses::chctl(curses::AT_RESET);
     
     printf(" ");
@@ -82,56 +90,58 @@ void get_integer(const char *s, int &v, std::function<bool(int)> f) {
     do get_integer(s, v); while(!f(v));
 }
 
-int main() {
-    int x, y, width, height, bomb;
-
-    std::cin.exceptions(std::ios::failbit);
-
+msweeper init_msweeper() {
     get_integer("Width", width, [](int t) {
             bool r = 0 <= t;
-            if (!r) std::cout << "[ERR] Constraint Error (0 <= Width)" << std::endl;
+            if (!r) std::cout << err_msg_width << std::endl;
             return r;
         });
 
     get_integer("Height", height, [](int t) {
             bool r = 0 <= t;
-            if (!r) std::cout << "[ERR] Constraint Error (0 <= Height)" << std::endl;
+            if (!r) std::cout << err_msg_height << std::endl;
             return r;
         });
 
     get_integer("Bomb", bomb, [=](int t) {
             bool r = 0 <= t && t <= width * height;
-            if (!r) std::cout << "[ERR] Constraint Error (0 <= Bomb <= Width * Height)" << std::endl;
+            if (!r) std::cout << err_msg_bomb << std::endl;
             return r;
         });
 
-    try {
-        msweeper ms(width, height, bomb);
+    return msweeper(width, height, bomb);
+}
 
-        while(ms.get_status() == msweeper::status::MS_NONE) {
-            curses::clear();
-            display(ms);
+int main() {
+    int x, y, width, height, bomb;
 
+    std::cin.exceptions(std::ios::failbit);
+
+    msweeper ms = init_msweeper();
+
+    while(ms.get_status() == msweeper::status::MS_NONE) {
+        bool f;
+
+        display_map(ms);
+
+        do {
             get_integer("X", x, [&](int t) {
                     bool r = 0 <= t && t <= ms.width;
-                    if (!r) std::cout << "[ERR] Constraint Error (0 <= X <= Width)" << std::endl;
+                    if (!r) std::cout << err_msg_x << std::endl;
                     return r;
                 });
             get_integer("Y", y, [&](int t) {
                     bool r = 0 <= t && t <= ms.height;
-                    if (!r) std::cout << "[ERR] Constraint Error (0 <= Y <= Height)" << std::endl;
+                    if (!r) std::cout << err_msg_y << std::endl;
                     return r;
                 });
 
-            ms.open(x, y);
-        }
-
-        if(ms.get_status() == msweeper::status::MS_GAME_CLEAR) std::cout << "GAME CLEAR!" << std::endl;
-        else std::cout << "GAME OVER..." << std::endl;
-    } 
-    catch (std::runtime_error &e) {
-        std::cout << e.what() << std::endl;
+            if (!(f = ms.open(x, y))) std::cout << err_msg_open << std::endl;
+        } while(f);
     }
+
+    if(ms.get_status() == msweeper::status::MS_GAME_CLEAR) std::cout << "GAME CLEAR!" << std::endl;
+    else std::cout << "GAME OVER..." << std::endl;
 
     return 0;
 }
