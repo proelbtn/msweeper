@@ -6,9 +6,6 @@
 #include "curses.hpp"
 #include "msweeper.hpp"
 
-const char *num_bar = "0    5    ";
-const char *cell    = ".12345678#";
-
 const char *err_msg_width  = "[ERR] Constraint Error (0 <= Width)";
 const char *err_msg_height = "[ERR] Constraint Error (0 <= Height)";
 const char *err_msg_bomb   = "[ERR] Constraint Error (0 <= Bomb <= Width * Height)";
@@ -16,50 +13,49 @@ const char *err_msg_x      = "[ERR] Constraint Error (0 <= X <= Width)";
 const char *err_msg_y      = "[ERR] Constraint Error (0 <= Y <= Height)";
 const char *err_msg_open   = "[ERR] Invalid Argument (This cell was opened)";
 
-void flag_color_set(int t, uint32_t &flag) {
+void display_cell(msweeper& ms, int x, int y) {
+    uint32_t flag = 0;
+    int t = ms.at(x, y);
+
     switch(t) {
-        case 1: flag |= curses::FG_YELLOW; break;
-        case 2: flag |= curses::FG_GREEN; break;
-        case 3: flag |= curses::FG_CYAN; break;
-        case 4: flag |= curses::FG_CYAN; break;
-        case 5: flag |= curses::FG_BLUE; break;
-        case 6: flag |= curses::FG_BLUE; break;
-        case 7: flag |= curses::FG_RED; break;
-        case 8: flag |= curses::FG_RED; break;
+        case 1: flag |= curses::AT_BOLD | curses::FG_YELLOW; break;
+        case 2: flag |= curses::AT_BOLD | curses::FG_GREEN; break;
+        case 3: flag |= curses::AT_BOLD | curses::FG_CYAN; break;
+        case 4: flag |= curses::AT_BOLD | curses::FG_CYAN; break;
+        case 5: flag |= curses::AT_BOLD | curses::FG_BLUE; break;
+        case 6: flag |= curses::AT_BOLD | curses::FG_BLUE; break;
+        case 7: flag |= curses::AT_BOLD | curses::FG_RED; break;
+        case 8: flag |= curses::AT_BOLD | curses::FG_RED; break;
         default: flag |= curses::FG_WHITE; break;
     }
+    curses::chctl(flag);
+    putchar(".12345678#"[t]);
+
+    curses::chctl(curses::AT_RESET);
 }
 
 void display_map(msweeper& ms) {
-    curses::clear();
-    curses::chctl(curses::AT_RESET);
-    
-    printf(" ");
-    for(int i = 0; i < ms.width; i++) printf("%s%c", i % 5 == 0 ? "|" : "", (i % 10)[num_bar]);
+    putchar(' ');
+    for(int i = 0; i < ms.width; i++) {
+        if (i % 5 == 0) putchar('|');
+        putchar("0    5    "[i % 10]);
+    }
     putchar('\n');
 
     for(int y = 0; y < ms.height; y++) {
         if(y % 5 == 0) {
-            curses::chctl(curses::AT_RESET);
-            printf("-");
-            for(int x = 0; x < ms.width; x++) printf("%s", x % 5 == 0 ? "+-" : "-");
+            putchar('-');
+            for(int x = 0; x < ms.width; x++) {
+                if (x % 5 == 0) putchar('+');
+                putchar('-');
+            }
             putchar('\n');
         }
 
-        putchar((y % 10)[num_bar]);
+        putchar("0    5    "[y % 10]);
         for(int x = 0; x < ms.width; x++) {
-            uint32_t flag = 0;
-            int t = ms.at(x, y);
-            if (t == msweeper::MS_CELL_INVALID) throw "Error!";
-
-            curses::chctl(curses::AT_RESET);
-            printf("%s", x % 5 == 0 ? "|" : "");
-            flag = 0;
-            flag |= (1 <= t && t <= 8 ? curses::AT_BOLD : 0);
-            flag_color_set(t, flag);
-            curses::chctl(flag);
-
-            putchar(t[cell]);
+            if(x % 5 == 0) putchar('|');
+            display_cell(ms, x, y);
         }
         putchar('\n');
     }
@@ -91,6 +87,8 @@ void get_integer(const char *s, int &v, std::function<bool(int)> f) {
 }
 
 msweeper init_msweeper() {
+    int width, height, bomb;
+
     get_integer("Width", width, [](int t) {
             bool r = 0 <= t;
             if (!r) std::cout << err_msg_width << std::endl;
@@ -113,15 +111,15 @@ msweeper init_msweeper() {
 }
 
 int main() {
-    int x, y, width, height, bomb;
+    int x, y;
+    bool f;
 
     std::cin.exceptions(std::ios::failbit);
 
     msweeper ms = init_msweeper();
 
     while(ms.get_status() == msweeper::status::MS_NONE) {
-        bool f;
-
+        curses::clear();
         display_map(ms);
 
         do {
@@ -137,7 +135,7 @@ int main() {
                 });
 
             if (!(f = ms.open(x, y))) std::cout << err_msg_open << std::endl;
-        } while(f);
+        } while(!f);
     }
 
     if(ms.get_status() == msweeper::status::MS_GAME_CLEAR) std::cout << "GAME CLEAR!" << std::endl;
