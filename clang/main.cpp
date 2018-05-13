@@ -118,7 +118,7 @@ int main() {
 
     msweeper ms = init_msweeper();
 
-    while(ms.get_status() == msweeper::status::MS_NONE) {
+    while(ms.get_status() == msweeper::status::MS_OTHER) {
         curses::clear();
         display_map(ms);
 
