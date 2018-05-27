@@ -78,6 +78,8 @@ void get_integer(const char *s, int &v) {
         }
         
         if (f) {
+            if (std::cin.eof()) exit(1);
+
             std::cin.clear();
             std::cout << "[ERR] Runtime Error (expected ONLY Integer)" << std::endl;
         }
